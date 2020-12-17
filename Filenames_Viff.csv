@@ -1,0 +1,35 @@
+Type,FileName,Description,Wind,Harvest,Climate,GDD
+Scenario,scenario_Wind.txt,"Wind, BAU Harvest",1,0,,
+Scenario,scenario_NoWind.txt,"NoWind, BAU Harvest",0,0,,
+Scenario,scenario_Wind_HarvestPlus20.txt,"Wind, BAU Harvest Plus 20% more area harvested",1,1,,
+Scenario,scenario_NoWind_HarvestPlus20.txt,"NoWind, BAU Harvest Plus 20% more area harvested",0,1,,
+Scenario,scenario_Wind_HarvestMinus20.txt,"Wind, BAU Harvest Plus 20% more area harvested",1,2,,
+Scenario,scenario_NoWind_HarvestMinus20.txt,"No Wind, BAU Harvest Plus 20% more area harvested",0,2,,
+Scenario,scenario_Wind_EvenHarvest.txt,"Wind, EvenAged Harvest",1,3,,
+Scenario,scenario_NoWind_EvenHarvest.txt,"NoWind, EvenAged Harvest",0,3,,
+Scenario,scenario_Wind_UnevenHarvest.txt,"Wind, UnevenAged Harvest",1,4,,
+Scenario,scenario_NoWind_UnevenHarvest.txt,"NoWind, UnevenAged Harvest",0,4,,
+NECN,NECN_VIFF_Hist.txt,Historical climate,,,0,0
+NECN,NECN_VIFF_Hist_GDDMax_plus10.txt,"Historical climate, GDDMax_plus10%",,,0,1
+NECN,NECN_VIFF_Hist_GDDMax_minus10.txt,"Historical climate, GDDMax_minus10%",,,0,2
+NECN,NECN_VIFF_HAD.txt,HAD climate change,,,1,0
+NECN,NECN_VIFF_HAD_GDDMax_plus10.txt,"HAD climate, GDDMax_plus10%",,,1,1
+NECN,NECN_VIFF_HAD_GDDMax_minus10.txt,"HAD climate, GDDMax_minus10%",,,1,2
+NECN,NECN_VIFF_bcc.txt,bcc climate change,,,2,0
+NECN,NECN_VIFF_bcc_GDDMax_plus10.txt,"bcc climate, GDDMax_plus10%",,,2,1
+NECN,NECN_VIFF_bcc_GDDMax_minus10.txt,"bcc climate, GDDMax_minus10%",,,2,2
+NECN,NECN_VIFF_CCSM4.txt,CCSM4 climate change,,,3,0
+NECN,NECN_VIFF_CCSM4_GDDMax_plus10.txt,"CCSM4 climate, GDDMax_plus10%",,,3,1
+NECN,NECN_VIFF_CCSM4_GDDMax_minus10.txt,"CCSM4 climate, GDDMax_minus10%",,,3,2
+NECN,NECN_VIFF_CSIRO.txt,CSIRO climate change,,,4,0
+NECN,NECN_VIFF_CSIRO_GDDMax_plus10.txt,"CSIRO climate, GDDMax_plus10%",,,4,1
+NECN,NECN_VIFF_CSIRO_GDDMax_minus10.txt,"CSIRO climate, GDDMax_minus10%",,,4,2
+NECN,NECN_VIFF_MRI.txt,MRI climate change,,,5,0
+NECN,NECN_VIFF_MRI_GDDMax_plus10.txt,"MRI climate, GDDMax_plus10%",,,5,1
+NECN,NECN_VIFF_MRI_GDDMax_minus10.txt,"MRI climate, GDDMax_minus10%",,,5,2
+NECN,NECN_VIFF_MIROC.txt,MIROC climate change,,,6,0
+NECN,NECN_VIFF_MIROC_GDDMax_plus10.txt,"MIROC climate, GDDMax_plus10%",,,6,1
+NECN,NECN_VIFF_MIROC_GDDMax_minus10.txt,"MIROC climate, GDDMax_minus10%",,,6,2
+Wind,BaseWind_500.txt,BAU wind with a WRP of 500,1,,,
+Wind,BaseWind_225.txt,More windstorms with a WRP of 225,2,,,
+Wind,BaseWind_750.txt,Less windstorms with a WRP of 750,3,,,
