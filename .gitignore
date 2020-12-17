@@ -1,0 +1,19 @@
+# Miscellaneous PBS/system files
+*.o
+*.pbs
+\#*#
+*.*~
+
+# compiled Python files
+*.pyc
+
+# R history and environment files
+.Rhistory
+*.RData
+
+# LANDIS repository for ensemble runs
+repo/*
+
+# figure files
+*.pdf
+*.png
