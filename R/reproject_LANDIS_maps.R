@@ -1,6 +1,3 @@
-#This script was written by M. Lucash to reproject all the species biomass maps from LANDIS-II.
-# 10/13/20
-
 library(raster)
 
 reproject <- function(path) {
@@ -19,7 +16,9 @@ reproject <- function(path) {
   spatial_reference <- raster(climate_map) #rasterize the input file.
   
   # create directory for reprojected maps
-  dir.create("output-biomass_rp")
+  dir.create("output-biomass_rp") # species biomass maps
+  dir.create("cohort-outputs_rp") # age eveneness maps
+  dir.create("output-biomass-reclass_rp") # biomass reclass maps
 
   #Then reproject all the species maps in the output-biomass directory and put them in the output-biomass_rp directory.
   sp_biomass_dir <- "output-biomass" #directory of biomass raster
@@ -32,7 +31,34 @@ reproject <- function(path) {
   
     projectedLandisOutputRaster <- SetLandisCRS(spp_LANDIS_eachRaster, spatial_reference)
     writeRaster(projectedLandisOutputRaster, spp_LANDIS_newName,datatype='INT4S', overwrite=TRUE)
-    }
+  }
+  
+  #Then reproject all the reclass maps in the output-biomass-reclass directory and put them in the output-biomass-reclass_rp directory.
+  FT_dir <- "output-biomass-reclass" # directory of biomass recall rasters
+  all_FT_files <- list.files(FT_dir) #all the species biomass files +total biomass file.
+ 
+   for (s in 1:length(all_FT_files)){ #for each species...
+    FT_LANDIS<-all_FT_files[s]
+    FT_LANDIS_eachRaster<-raster(file.path("output-biomass-reclass", FT_LANDIS))
+    FT_LANDIS_newName<-paste("output-biomass-reclass_rp/", FT_LANDIS,sep=""))
+    
+    projectedLandisOutputRaster <- SetLandisCRS(FT_LANDIS_eachRaster, spatial_reference)
+    writeRaster(projectedLandisOutputRaster, FT_LANDIS_newName,datatype='INT4S', overwrite=TRUE)
+   }
+  
+  #Then reproject all the EVEN  maps in the cohort-outputs/ directory and put them in the cohort-outputs_rp directory.
+  CohortStats_dir <- "cohort-outputs/age-all-spp" #directory of biomass raster
+  all_CS_files <- list.files(CohortStats_dir) #all the species biomass files +total biomass file.
+  EVEN_Files <- grep("AGE-EVEN", all_CS_files,value=T)
+  
+  for (s in 1:length(EVEN_Files)) {
+    CS_LANDIS <- EVEN_Files[s]
+    CS_LANDIS_eachRaster<-raster(file.path("cohort-outputs/age-all-spp/", CS_LANDIS))
+    CS_LANDIS_newName<-paste("cohort-outputs_rp/", CS_LANDIS,sep=""))
+    
+    projectedLandisOutputRaster <- SetLandisCRS(CS_LANDIS_eachRaster, spatial_reference)
+    writeRaster(projectedLandisOutputRaster, CS_LANDIS_newName,datatype='INT4S', overwrite=TRUE)
+  }
 }
 
 #library(Rmpi)
