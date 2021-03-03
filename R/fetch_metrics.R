@@ -2,9 +2,19 @@ library(plyr)
 library(parallel)
 library(doParallel)
 library(foreach)
-library(ggplot2)
+library(vegan)
+library(raster)
+library(stringr)
+library(dplyr)
+library(ncdf4)
+
+out_file <- "LANDIS_ensemble-out.nc"
+
+# set path to overall ensemble location
+work_path <- '/gpfs/group/kzk10/default/private/vxs914/landis-RDM' # raw model output
 
 get_output <- function(path) {
+  print(path)
   setwd(path)
   
   # read in harvest output
@@ -55,17 +65,72 @@ get_output <- function(path) {
                 sum_Biomass_WhiteSpruce_Mg=sum(BiomassHarvestedMg_WhiteSpruce),
                 sum_Biomass_Willows_Mg=sum(BiomassHarvestedMg_Willows),
                 sum_Biomass_YellowBirch_Mg=sum(BiomassHarvestedMg_YellowBirch))
-        
+  
+  # get carbon sequestration data      
   log_out <- read.csv("NECN-succession-log-short.csv")
   soil_out <- log_out[,c(1,3,4)]  # select the column numbers of interest
   biomass_as_C <- soil_out$AGB/2
   final_C_data <- cbind.data.frame(soil_out[,c(1,2)], biomass_as_C)
+  
+  # get biodiversity metrics
+  years_of_interest<- 1:100 #This is where you can specify the year of interest
+  #Number of active cells
+  active_cells<-96691
+  
+  #Then go through both matrices and do all the calculations for the years of interest.
+  all_spp_matrix<-NULL
+  sp_biomass_dir<- "output-biomass_rp" #directory of biomass rasters (reprojected)
+  all_files<-list.files(sp_biomass_dir) #all the species biomass files +total biomass file.
+  
+  for (t in 1:length(years_of_interest)){
+    each_year<-years_of_interest[t]
+    
+    all_Ref_year_files<-grep(paste0("-",each_year,".img"), all_files,value=T)
+    sp_biomass_files_all<-grep("^TotalBiomass",all_Ref_year_files ,invert=T, value=T) #only the non "total biomass" files i.e. the species files.
+    sp_biomass_files_img <- sp_biomass_files_all[grepl("img$", sp_biomass_files_all)]
+    species_matrix<-NULL
+    for (s in 1:length(sp_biomass_files_img)){#for every species biomass raster file within time step
+      each_spp<-sp_biomass_files_img[s]
+      each_spp_name<-sub("\\-.*", "", each_spp)
+      spp_LANDIS_all<-as.data.frame(raster(file.path(sp_biomass_dir, each_spp)))#LANDIS unique spp biomass.
+      #spp_LANDIS_all<-as.data.frame(raster(paste(dir,each_scenario,"/", each_spp,"-", each_time,".img",sep="")))#LANDIS unique spp biomass.
+      colnames(spp_LANDIS_all)<-c("LANDIS_Biomass")
+      spp_LANDIS_all[is.na(spp_LANDIS_all)]<-0 
+      spp_LANDIS<-subset(spp_LANDIS_all, spp_LANDIS_all$LANDIS_Biomass>0)
+      avg_biomass<-mean(as.numeric(spp_LANDIS$LANDIS))   #Units of g/m2
+      extent <-length(as.numeric(spp_LANDIS$LANDIS))  #Total hectares of each species
+      Total_biomass <-avg_biomass*extent #Total hectares of each species
+      avg_landscape_biomass<-Total_biomass/active_cells
+      LANDIS_spp_output_row<-cbind.data.frame(each_year, each_spp_name, avg_landscape_biomass, extent)
+      all_spp_matrix<-rbind(all_spp_matrix, LANDIS_spp_output_row)
+    } #closes species]
+  }  #end of species loop  
+  
+  colnames(all_spp_matrix)<-c("Time", "Species", "Avg_Biomass_gm2", "Extent_ha")
+
+  # Age Evenness
+  age_matrix<-NULL
+  
+  cohort_stats_dir<-'cohort-outputs_rp' #directory of biomass rasters (reprojected)
+  all_files<-list.files(cohort_stats_dir) #all the species biomass files +total biomass file.
+  for (t in 1:length(years_of_interest)){
+    each_year<-years_of_interest[t]
+    all_Ref_year_files<-grep(paste0("-",each_year,".img"), all_files,value=T)
+    all_Ref_year_files_img <- all_Ref_year_files[grepl("img$", all_Ref_year_files)]
+    age_LANDIS_all<-as.data.frame(raster(file.path(cohort_stats_dir, all_Ref_year_files_img)))#LANDIS unique spp biomass.
+    colnames(age_LANDIS_all)<-c("LANDIS_Age_Evenness")
+    age_LANDIS_all[is.na(age_LANDIS_all)]<-0 
+    age_LANDIS<-subset(age_LANDIS_all, age_LANDIS_all$LANDIS_Age_Evenness>0)
+    avg_age<-mean(as.numeric(age_LANDIS$LANDIS_Age_Evenness))  
+    LANDIS_age_output_row<-cbind.data.frame(each_year, avg_age)
+    age_matrix<-rbind(age_matrix, LANDIS_age_output_row)
+  } #closes age loop
+  
+  colnames(age_matrix)<-c("Time", "Age_Evenness")
   # return outputs
-  data.frame(Harvest=sum(harvest[, -c(1, 2)]), Soil_OrgMat=sum(final_C_data[nrow(final_C_data), -1]))
+  list(Harvest=harvest[, -c(1, 2)], Soil_OrgMat=final_C_data[nrow(final_C_data), -1], AvgBiomass=all_spp_matrix, AgeEvenness=age_matrix)
 }
 
-# set path to overall ensemble location
-work_path <- '/gpfs/group/kzk10/default/private/vxs914/landis-RDM' # raw model output
 
 # set up MPI cluster
 #print(parallel::detectCores())
@@ -87,24 +152,10 @@ ens_path <- paste('LANDIS', ens_idx, sep='-')
 
 # loop over paths in parallel and run script
 main_path <- setwd(work_path)
-output <- foreach::foreach(k=1:length(ens_path), .packages = c('raster', 'plyr'), .combine='rbind') %dopar% {
+output <- foreach::foreach(k=1:length(ens_path), .packages = c('raster', 'stringr', 'dplyr', 'plyr', 'vegan')) %dopar% {
   setwd(work_path)
   get_output(ens_path[k])
 }
 setwd(main_path)
 
-stopCluster(cl)
-
-out_strat <- cbind(output, strategy=as.factor(scenarios[, 1]))
-out_strat$Soil_OrgMat <- out_strat$Soil_OrgMat / 1000
-
-p <- ggplot(out_strat) +
-  geom_point(aes(x=Harvest, y=Soil_OrgMat, color=strategy)) +
-  scale_color_brewer('Harvesting Strategy', palette='Dark2', labels=c('BAU', 'BAU + 20%', 'BAU - 20%', 'EvenAged', 'UnevenAged')) +
-  scale_x_continuous('Total Harvested Biomass, All Species (Mg)') +
-  scale_y_continuous(expression('Sequestered Carbon (kg C/m^2)')) +
-  theme_classic(base_size=12)
-
-pdf('harvest_soil_plot.pdf', height=4, width=6)
-p
-dev.off()
+saveRDS(output, file="landis-output.rds")
