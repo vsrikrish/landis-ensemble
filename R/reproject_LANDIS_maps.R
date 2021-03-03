@@ -40,7 +40,7 @@ reproject <- function(path) {
    for (s in 1:length(all_FT_files)){ #for each species...
     FT_LANDIS<-all_FT_files[s]
     FT_LANDIS_eachRaster<-raster(file.path("output-biomass-reclass", FT_LANDIS))
-    FT_LANDIS_newName<-paste("output-biomass-reclass_rp/", FT_LANDIS,sep=""))
+    FT_LANDIS_newName<-paste("output-biomass-reclass_rp/", FT_LANDIS,sep="")
     
     projectedLandisOutputRaster <- SetLandisCRS(FT_LANDIS_eachRaster, spatial_reference)
     writeRaster(projectedLandisOutputRaster, FT_LANDIS_newName,datatype='INT4S', overwrite=TRUE)
@@ -54,7 +54,7 @@ reproject <- function(path) {
   for (s in 1:length(EVEN_Files)) {
     CS_LANDIS <- EVEN_Files[s]
     CS_LANDIS_eachRaster<-raster(file.path("cohort-outputs/age-all-spp/", CS_LANDIS))
-    CS_LANDIS_newName<-paste("cohort-outputs_rp/", CS_LANDIS,sep=""))
+    CS_LANDIS_newName<-paste("cohort-outputs_rp/", CS_LANDIS,sep="")
     
     projectedLandisOutputRaster <- SetLandisCRS(CS_LANDIS_eachRaster, spatial_reference)
     writeRaster(projectedLandisOutputRaster, CS_LANDIS_newName,datatype='INT4S', overwrite=TRUE)
