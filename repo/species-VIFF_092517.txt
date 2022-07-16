@@ -1,0 +1,42 @@
+LandisData  Species										
+										
+>>                      Sexual    Shade  Fire  Seed Disperal Dist  Vegetative   Sprout Age  Post-Fire										
+>> Name      Longevity  Maturity  Tol.   Tol.  Effective  Maximum  Reprod Prob  Min   Max   Regen										
+>> ----      ---------  --------  -----  ----  ---------  -------  -----------  ----------  --------										
+AmBeech	300	20	5	1	91	402	0.75	5	50	resprout
+BalsamFir	200	25	5	1	60	160	0	0	0	none
+BalsamPoplar	150	20	2	3	200	5000	0.75	10	100	resprout
+Basswood	300	20	4	2	91	402	0.75	5	250	resprout
+BigToothAspen	100	20	1	2	500	5000	0.9	1	70	resprout
+BitternutHickory	200	30	3	2	30	1000	0.75	10	180	resprout
+BlackAsh	200	30	3	2	100	2000	0.8	10	150	resprout
+BlackCherry	250	10	3	1	5	3000	0.5	10	200	resprout
+BlackOak	200	20	4	3	91	1000	0.75	5	100	resprout
+BlackSpruce	300	30	3	1	79	158	0	0	0	none
+BurOak	400	35	2	5	18	1000	0.6	10	30	resprout
+Butternut	100	20	2	1	91	402	0.5	5	70	none
+Cottonwood	200	5	1	1	500	5000	0	0	0	none
+Elms	300	40	3	1	91	402	0.75	5	150	resprout
+GreenAsh	175	30	3	2	5	100	0.8	10	100	resprout
+Hemlock	800	25	5	1	30	100	0	0	0	none
+Hophornbeam	150	25	4	3	50	1000	0.4	10	150	resprout
+JackPine	150	5	1	1	120	140	0	0	0	serotiny
+PaperBirch	150	15	2	2	60	5000	0.8	10	60	resprout
+PinOak	125	20	2	3	30	1000	0.75	20	125	resprout
+QuakingAspen	100	10	1	2	500	5000	0.9	1	60	resprout
+RedCedar	150	10	1	1	45	5000	0	0	0	none
+RedMaple	200	4	3	1	100	200	0.5	10	100	resprout
+RedOak	500	25	2	3	3	5000	0.5	5	45	resprout
+RedPine	350	15	2	4	12	300	0	0	0	none
+ServiceBerries	60	5	4	4	5	3000	0.3	5	50	resprout
+ShagHickory	250	40	3	2	30	1000	0.8	5	100	resprout
+SilverMaple	130	11	3	2	15	100	0.75	5	60	resprout
+SugarMaple	300	30	5	1	15	100	0.3	10	100	none
+Tamarack	180	15	1	1	46	200	0	0	0	none
+WhiteAsh	300	20	4	2	70	140	0.3	10	100	resprout
+WhiteCedar	800	30	4	1	45	60	0	0	0	none
+WhiteOaks	300	20	3	4	3	5000	0.5	10	100	resprout
+WhitePine	450	20	3	3	60	210	0	0	0	none
+WhiteSpruce	300	30	4	2	27	300	0	0	0	none
+Willows	80	10	1	1	50	5000	0.8	5	70	resprout
+YellowBirch	300	40	3	2	45	400	0.1	10	100	resprout

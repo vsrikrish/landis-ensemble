@@ -1,0 +1,11 @@
+LandisData "Climate Config"				
+		
+ClimateTimeSeries			Daily_RandomYears
+ClimateFile				landis_climate_menominee_1979_2015-7Regions.csv
+ClimateFileFormat			Daily_Temp-K_Precip-mmday
+
+SpinUpClimateTimeSeries			Daily_AverageAllYears
+SpinUpClimateFile			landis_climate_menominee_1979_2015-7Regions-1y.csv
+SpinUpClimateFileFormat			Daily_Temp-K_Precip-mmday
+
+UsingFireClimate			no

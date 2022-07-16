@@ -1,0 +1,13 @@
+LandisData	"Ecoregions"		
+
+>> 	Map Code		
+>>Active	Name	Description
+>>--------------------------------------------------------			
+no	0	CLIM0	inactive
+yes	1	CLIM01	1
+yes	2	CLIM02	2
+yes	3	CLIM03	3
+yes	18	CLIM18	18
+yes	23	CLIM23	23
+yes	34	CLIM34	34
+yes	36	CLIM36	36

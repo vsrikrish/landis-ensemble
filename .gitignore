@@ -11,9 +11,6 @@
 .Rhistory
 *.RData
 
-# LANDIS repository for ensemble runs
-repo/*
-
 # figure files
 *.pdf
 *.png

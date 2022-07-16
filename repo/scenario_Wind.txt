@@ -1,0 +1,52 @@
+LandisData  Scenario
+
+Duration  100
+
+Species   species-VIFF_092517.txt
+
+
+Ecoregions      ./ClimateRegions_RDM.txt
+
+EcoregionsMap   ./ClimateMap_RDM.tif
+
+
+CellLength  100 << meters, 100 x 100 m = 1 hectare
+
+>> NOTE:  This example assumes that you have downloaded and installed 
+>> the correpsonding extensions.  These extensions are currently packaged
+>> together as a package.
+
+
+>> Succession Extension     Initialization File
+
+>> --------------------     -------------------
+  
+"NECN Succession"    NECN_VIFF_Hist.txt
+
+
+
+>> Disturbance Extensions   Initialization File
+
+>> ----------------------   -------------------
+"Base Wind"  		WindBase_RDM_061820.txt
+>>"Linear Wind" 	WindLinear_041718.txt
+"Biomass Harvest"	Harvest_BAU_070620.txt
+>>"SCRAPPLE"		Rx_Fire.txt
+
+>>   DisturbancesRandomOrder  yes  << optional parameter; default = no
+
+
+
+
+>> Other Extensions         Initialization File
+
+>> ----------------         -------------------
+"Output Biomass Reclass"  output-biomass-reclass.txt
+"Output Biomass"	    output-biomass.txt
+"Output Cohort Statistics"	output-CohortStats.txt
+
+
+
+
+RandomNumberSeed  24,357  << optional parameter; default = the seed is
+                         << randomly generated using the current time

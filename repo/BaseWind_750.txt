@@ -1,0 +1,33 @@
+LandisData "Base Wind"			
+
+Timestep 1			
+
+>>Initially using the same value across the landscape 30y period
+>>Will refine it by ecoregion later.
+>>
+>>Ecoregion MaxSize  MeanSize MinSize WindRotationPeriod
+>>--------------------------------------------------------------------				
+CLIM01	45000	130	1	625   << max based on blowdown in CNF in 2012 damaged 43914 ha
+CLIM02	45000	130	1	625
+CLIM03	45000	130	1	625
+CLIM18	45000	130	1	625
+CLIM23	45000	130	1	625
+CLIM34	45000	130	1	625
+CLIM36	45000	130	1	625
+
+>>These came from Figure 3 in Rich et al (2507) in J of Ecology, Figure 3 w/intensity=0.125 to 0.875
+WindSeverities				
+
+>>		Cohort Age		Mortality
+>>Severity 	% of longevity		Probability	
+>>-----------------------------------------------------				
+5		0% to 20%		0.2
+4		20% to 40%		0.3
+3		40% to 60%		0.6
+2		60% to 80%		0.8  
+1		80% to 100%		0.9  
+
+
+
+MapNames wind/severity-{timestep}.img
+LogFile wind/log.csv

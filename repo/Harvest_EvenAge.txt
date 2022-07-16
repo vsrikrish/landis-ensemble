@@ -1,0 +1,204 @@
+LandisData "Biomass Harvest"
+Timestep 1  
+
+ManagementAreas "ManageMap_RDM.tif"
+Stands      "StandMap_RDM.tif"
+
+>>*****************************************
+>>  THINNING PRESCRIPTIONS
+>>*****************************************
+Prescription  RedPine_Thinning  
+StandRanking  MaxCohortAge <<THe oldest stands are excluded via the inclusion rule, so we should thin oldest first to reflect likely silvicultural practice
+MinimumAge 30		
+MaximumAge 80	<<Older stands not included for thinning, but they would be eligible for clearcutting
+
+ForestTypeTable << 
+>> InclusionRule ageRange percentCells species
+Optional 30-80 highest RedPine	<<younger than MinimumAge is used just for typing purposes here
+Optional 30-80 highest WhitePine
+Optional 30-80 50 RedPine WhitePine
+
+SiteSelection Complete
+MinTimeSinceDamage 20 
+CohortsRemoved	SpeciesList
+	>>Species 	Selection
+		>>-------	--------
+			AmBeech	All
+	BalsamFir	All
+	BalsamPoplar	All
+	Basswood	All
+	BigToothAspen	All
+	BitternutHickory	All
+	BlackAsh	All
+	BlackCherry	All
+	BlackOak	All
+	BlackSpruce	All
+	BurOak	All
+	Butternut	All
+	Cottonwood	All
+	Elms	All
+	GreenAsh	All
+	Hemlock	All
+	Hophornbeam	All
+	JackPine	All
+	PaperBirch	All
+	PinOak	All
+	QuakingAspen	All
+	RedCedar	All
+	RedMaple	All
+	RedOak	All
+	RedPine	30-100	(30%)
+	ServiceBerries	All
+	ShagHickory	All
+	SilverMaple	All
+	SugarMaple	All
+	Tamarack	All
+	WhiteAsh	All
+	WhiteCedar	All
+	WhiteOaks	All
+	WhitePine	30-100	(30%)
+	WhiteSpruce	All
+	Willows	All
+	YellowBirch	All
+
+>>***************************		
+Prescription  SpruceFir_Thinning    
+>>StandRanking  MaxCohortAge  <<THe oldest stands are excluded via the inclusion rule, so we should thin oldest first to reflect likely silvicultural practice
+StandRanking 	MaxCohortAge
+MinimumAge 30		
+MaximumAge 80	
+
+ForestTypeTable << spruce-fir
+>> InclusionRule ageRange percentCells species
+Optional 30-40 highest WhiteSpruce << either spruce or fir can qualify the stand
+Optional 30-50 highest BalsamFir << either spruce or fir can qualify the stand
+Optional 30-80 50 WhiteSpruce BalsamFir <<together they can qualify the stand. You could stipulate that together they must be Highest
+Forbidden 20-80	highest QuakingAspen BigToothAspen PaperBirch 	
+
+SiteSelection Complete 
+MinTimeSinceDamage 20 
+CohortsRemoved	SpeciesList
+	>>Species 	Selection
+		>>-------	--------
+			AmBeech	All
+	BalsamFir	30-80		(30%)	
+	BalsamPoplar	All
+	Basswood	All
+	BigToothAspen	All
+	BitternutHickory	All
+	BlackAsh	All
+	BlackCherry	All
+	BlackOak	All
+	BlackSpruce	All
+	BurOak	All
+	Butternut	All
+	Cottonwood	All
+	Elms	All
+	GreenAsh	All
+	Hemlock	All
+	Hophornbeam	All
+	JackPine	All
+	PaperBirch	All
+	PinOak	All
+	QuakingAspen	All
+	RedCedar	All
+	RedMaple	All
+	RedOak	All
+	RedPine	All
+	ServiceBerries	All
+	ShagHickory	All
+	SilverMaple	All
+	SugarMaple	All
+	Tamarack	All
+	WhiteAsh	All
+	WhiteCedar	All
+	WhiteOaks	All
+	WhitePine	All
+	WhiteSpruce	30-80		(30%)
+	Willows	All
+	YellowBirch	All
+	
+>>*****************************************
+Prescription Aspen_Thinning  	<<Assumes thinning from below.  ARE OTHER SPP THINNED?
+>>StandRanking  MaxCohortAge  <<THe oldest stands are excluded via the inclusion rule, so we should thin oldest first to reflect likely silvicultural practice
+StandRanking 	Random  
+MinimumAge 20		
+MaximumAge 40
+
+ForestTypeTable 
+>> InclusionRule ageRange percentCells species
+Required 10-40 50 QuakingAspen BigToothAspen <<The 2 "Required" statements can be deleted if stands are not required to have BOTH aspen AND hardwood
+Forbidden 10-50 highest BalsamFir WhiteSpruce << exclude spruce-fir stands
+>> Need to exclude stands targeted for unevenaged_Hardwooods?  Other similar types targeted for other prescriptons? 
+
+
+SiteSelection Complete 
+MinTimeSinceDamage 15
+CohortsRemoved	SpeciesList
+	>>Species 	Selection
+		>>-------	--------
+	AmBeech	All
+	BalsamFir	All
+	BalsamPoplar	30-49		(33%)
+	Basswood	All
+	BigToothAspen	30-49		(33%)
+	BitternutHickory	All
+	BlackAsh	All
+	BlackCherry	All
+	BlackOak	All
+	BlackSpruce	All
+	BurOak		All
+	Butternut	All
+	Cottonwood	30-49		(33%)
+	Elms		All
+	GreenAsh	All
+	Hemlock		All
+	Hophornbeam	All
+	JackPine	All
+	PaperBirch	30-49		(33%)
+	PinOak		All
+	QuakingAspen	30-49		(33%)
+	RedCedar	All
+	RedMaple	All
+	RedOak		All
+	RedPine		All
+	ServiceBerries	All
+	ShagHickory	All
+	SilverMaple	All
+	SugarMaple	All
+	Tamarack	All
+	WhiteAsh	All
+	WhiteCedar	All
+	WhiteOaks	All
+	WhitePine	All
+	WhiteSpruce	All
+	Willows		All
+	YellowBirch	All
+
+>>----------------- Clearcutting Stands-------------------------
+Prescription Clearcut
+StandRanking 	MaxCohortAge  
+SiteSelection Complete
+MinTimeSinceDamage 40 
+CohortsRemoved ClearCut
+
+>> -----------------------------------------------------------
+HarvestImplementations		
+>> MgmtArea Descriptions:					
+>> 1 = Menominee Harvest
+>> 2 = Menominee_NoHarvest
+
+
+>>ma	presc			target%	start	stop	COMMENTS
+1	RedPine_Thinning	0.70%	0	100
+1	SpruceFir_Thinning	0.03%	0	100
+1	Aspen_Thinning	0.02%	0	100
+1	Clearcut	0.44%	0	100
+
+
+PrescriptionMaps	harvest/prescripts-{timestep}.img
+BiomassMaps		harvest/biomass-removed-{timestep}.img
+EventLog            harvest/event-log.csv
+SummaryLog	    harvest/summary-log.csv
+
+
