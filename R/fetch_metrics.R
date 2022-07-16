@@ -13,8 +13,9 @@ out_file <- "LANDIS_ensemble-out.nc"
 # set path to overall ensemble location
 work_path <- '/gpfs/group/kzk10/default/private/vxs914/landis-RDM' # raw model output
 
-get_output <- function(path) {
-  print(path)
+get_output <- function(scen) {
+  idx <- paste(scen, collapse="-")
+  path <- paste('LANDIS', idx, sep='-')
   setwd(path)
   
   # read in harvest output
@@ -72,7 +73,7 @@ get_output <- function(path) {
   biomass_as_C <- soil_out$AGB/2
   final_C_data <- cbind.data.frame(soil_out[,c(1,2)], biomass_as_C)
   
-  # get biodiversity metrics
+  # get species extent metrics
   years_of_interest<- 1:100 #This is where you can specify the year of interest
   #Number of active cells
   active_cells<-96691
@@ -127,8 +128,44 @@ get_output <- function(path) {
   } #closes age loop
   
   colnames(age_matrix)<-c("Time", "Age_Evenness")
-  # return outputs
-  list(Harvest=harvest[, -c(1, 2)], Soil_OrgMat=final_C_data[nrow(final_C_data), -1], AvgBiomass=all_spp_matrix, AgeEvenness=age_matrix)
+  
+  # get diversity metrics
+  #This is where you can specify the year of interest
+  years_of_interest<-c(50,100)
+  
+  #Then go through both matrices and do all the calculations for the years of interest.
+  diversity_matrix<-NULL
+  
+  sp_biomass_dir <- "output-biomass_rp" #directory of biomass raster
+  all_files<-list.files(sp_biomass_dir) #all the species biomass files +total biomass file.
+  
+  for (t in 1:length(years_of_interest)){
+    each_year<-years_of_interest[t]
+    
+    all_Ref_year_files<-grep(paste0("-",each_year,".img"), all_files,value=T)
+    sp_biomass_files_all<-grep("^TotalBiomass",all_Ref_year_files ,invert=T, value=T) #only the non "total biomass" files i.e. the species files.
+    sp_biomass_files_img <- sp_biomass_files_all[grepl("img$", sp_biomass_files_all)]
+    
+    species_matrix<-NULL
+    for (s in 1:length(sp_biomass_files_img)){#for every species biomass raster file within time step
+      each_spp<-sp_biomass_files_img[s]
+      spp<-as.vector(raster(file.path(sp_biomass_dir,each_spp)))#species raster       
+      species_matrix<-cbind(species_matrix, spp)#cbind all the species together. 
+      number_species<-specnumber(species_matrix)
+      tree_species_diversity<-diversity(species_matrix)
+      number_spp_nozeros<-subset(number_species, number_species>0)
+      diversity_nozeros<-subset(tree_species_diversity, number_species>0)
+      Mean_Number_spp<-mean(number_spp_nozeros)
+      Mean_diversity<-mean(diversity_nozeros)
+    }  #end of species loop  
+    
+    diversity_row<-cbind.data.frame(each_year,  Mean_Number_spp, Mean_diversity)  
+    diversity_matrix<-rbind(diversity_matrix, diversity_row)  
+  } # end of loop
+
+
+    # return outputs
+  list(Scenario=data.frame(harvest=scen[1], wind=scen[2], climate=scen[3], gdd=scen[4]), Harvest=harvest[, -c(1, 2)], Soil_OrgMat=final_C_data[nrow(final_C_data), -1], AvgBiomass=all_spp_matrix, AgeEvenness=age_matrix, Diversity=diversity_matrix)
 }
 
 
@@ -147,15 +184,14 @@ wind <- seq(0, 3)
 climate <- seq(0, 6)
 gdd <- seq(0, 2)
 scenarios <- expand.grid(harvest, wind, climate, gdd)
-ens_idx <- do.call(paste, c(scenarios, sep="-"))
-ens_path <- paste('LANDIS', ens_idx, sep='-')
 
 # loop over paths in parallel and run script
 main_path <- setwd(work_path)
-output <- foreach::foreach(k=1:length(ens_path), .packages = c('raster', 'stringr', 'dplyr', 'plyr', 'vegan')) %dopar% {
+output <- foreach::foreach(k=1:nrow(scenarios), .packages = c('raster', 'stringr', 'dplyr', 'plyr', 'vegan')) %dopar% {
   setwd(work_path)
-  get_output(ens_path[k])
+  get_output(scenarios[k,])
 }
 setwd(main_path)
 
 saveRDS(output, file="landis-output.rds")
+
